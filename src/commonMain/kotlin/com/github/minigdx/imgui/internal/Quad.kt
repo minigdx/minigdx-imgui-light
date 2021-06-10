@@ -1,7 +1,5 @@
 package com.github.minigdx.imgui.internal
 
-import com.github.minigdx.imgui.UVCoordinates
-
 class Quad(
     private val vertices: ArrayList<Float> = arrayListOf<Float>(),
     private val verticesOrder: ArrayList<Int> = arrayListOf<Int>(),

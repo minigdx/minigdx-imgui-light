@@ -5,6 +5,7 @@ import com.github.minigdx.imgui.atlas.WidgetAtlas
 import com.github.minigdx.imgui.internal.Cursor
 import com.github.minigdx.imgui.internal.Quad
 import com.github.minigdx.imgui.internal.Resolution
+import com.github.minigdx.imgui.internal.UVCoordinates
 import kotlin.math.abs
 
 // https://github.com/matson48/matson48-fonts
@@ -23,7 +24,7 @@ fun gui(
     inputCapture: InputCapture,
     gameResolution: Resolution,
     widgetBuilder: WidgetAtlas = defaultWidgetAtlas(),
-    builder: WidgetDsl.() -> Unit
+    builder: WidgetBuilder.() -> Unit
 ) {
     inputCapture.update()
     val widgetDsl = WidgetDsl(inputCapture, gameResolution, widgetBuilder)
@@ -35,12 +36,29 @@ fun gui(
     )
 }
 
+interface WidgetBuilder {
+
+    fun horizontalContainer(
+        x: Float,
+        y: Float,
+        width: Float,
+        builder: WidgetDsl.ContainerDsl.() -> Unit
+    )
+
+    fun verticalContainer(
+        x: Float = 0f,
+        y: Float = 0f,
+        width: Float = 1f,
+        builder: WidgetDsl.ContainerDsl.() -> Unit
+    )
+}
+
 @ImGUI
 class WidgetDsl(
     private val inputCapture: InputCapture,
     private val gameResolution: Resolution,
     private val widgetAtlas: WidgetAtlas
-) {
+) : WidgetBuilder {
 
     internal val vertices: ArrayList<Float> = arrayListOf()
     internal val uvs: ArrayList<Float> = arrayListOf()
@@ -48,7 +66,7 @@ class WidgetDsl(
 
     private val quad = Quad(vertices, verticesOrder, uvs)
 
-    fun horizontalContainer(
+    override fun horizontalContainer(
         x: Float,
         y: Float,
         width: Float,
@@ -58,10 +76,10 @@ class WidgetDsl(
         ContainerDsl(cursor, width).builder()
     }
 
-    fun verticalContainer(
-        x: Float = 0f,
-        y: Float = 0f,
-        width: Float = 1f,
+    override fun verticalContainer(
+        x: Float,
+        y: Float,
+        width: Float,
         builder: ContainerDsl.() -> Unit
     ) {
         val cursor = Cursor(Cursor.CursorWay.VERTICAL, x, y)
@@ -83,12 +101,12 @@ class WidgetDsl(
 
             val height =
                 (abs(widgetAtlas.buttonOver.left.second.y - widgetAtlas.buttonOver.left.first.y) * widgetAtlas.resolution.height) / gameResolution.height
-            val mouseOver = isMouseOver(
-                cursor.x + this@ContainerDsl.width * x,
-                cursor.y,
-                this@ContainerDsl.width * width,
-                height
-            )
+
+            val rectX = cursor.x + this@ContainerDsl.width * x
+            val rectY = cursor.y
+            val with = this@ContainerDsl.width * width
+
+            val mouseOver = isMouseOver(rectX, rectY, with, height)
 
             val uvsLeft = if (isPushed) {
                 widgetAtlas.buttonActivated.left
@@ -193,10 +211,11 @@ class WidgetDsl(
             }
         }
     }
+
+    val Pair<UVCoordinates, UVCoordinates>.width: Float
+        get() = abs(this.first.x - this.second.x)
+
+    val Pair<UVCoordinates, UVCoordinates>.height: Float
+        get() = abs(this.first.y - this.second.y)
 }
 
-val Pair<UVCoordinates, UVCoordinates>.width: Float
-    get() = abs(this.first.x - this.second.x)
-
-val Pair<UVCoordinates, UVCoordinates>.height: Float
-    get() = abs(this.first.y - this.second.y)
