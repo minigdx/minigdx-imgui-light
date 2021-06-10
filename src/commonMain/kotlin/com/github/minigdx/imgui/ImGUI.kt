@@ -218,4 +218,3 @@ class WidgetDsl(
     val Pair<UVCoordinates, UVCoordinates>.height: Float
         get() = abs(this.first.y - this.second.y)
 }
-
