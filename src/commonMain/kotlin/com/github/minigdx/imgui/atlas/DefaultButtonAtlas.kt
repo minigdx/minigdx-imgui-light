@@ -1,31 +1,39 @@
 package com.github.minigdx.imgui.atlas
 
-import com.github.minigdx.imgui.UVCoordinates
+import com.github.minigdx.imgui.internal.Resolution
+import com.github.minigdx.imgui.internal.UVCoordinates
 
-class DefaultButtonAtlas(private val xOffet: Float = 0f, private val yOffset: Float = 0f) : WidgetAtlas.ButtonAtlas {
-
-    private val width = 1 / 256f
-    private val height = 1 / 64f
+class DefaultButtonAtlas(
+    private val xOffet: Int = 0,
+    private val yOffset: Int = 0,
+    override val resolution: Resolution
+) : WidgetAtlas.ButtonAtlas {
 
     override val left: Pair<UVCoordinates, UVCoordinates> = UVCoordinates(
-        xOffet + 0f * width,
-        yOffset + 36f * height
+        xOffet + 0,
+        yOffset + 33,
+        resolution
     ) to UVCoordinates(
-        xOffet + 6f * width,
-        yOffset + 48f * height
+        xOffet + 3,
+        yOffset + 44,
+        resolution
     )
     override val center: Pair<UVCoordinates, UVCoordinates> = UVCoordinates(
-        xOffet + 6f * width,
-        yOffset + 36f * height
+        xOffet + 3,
+        yOffset + 33,
+        resolution
     ) to UVCoordinates(
-        xOffet + 8f * width,
-        yOffset + 48f * height
+        xOffet + 5,
+        yOffset + 44,
+        resolution
     )
     override val right: Pair<UVCoordinates, UVCoordinates> = UVCoordinates(
-        xOffet + 6f * width,
-        yOffset + 36f * height
+        xOffet + 5,
+        yOffset + 33,
+        resolution
     ) to UVCoordinates(
-        xOffet + 12f * width,
-        yOffset + 48f * height
+        xOffet + 8,
+        yOffset + 44,
+        resolution
     )
 }
