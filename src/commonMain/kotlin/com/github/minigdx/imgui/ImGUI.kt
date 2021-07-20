@@ -19,52 +19,71 @@ fun defaultWidgetAtlas(): WidgetAtlas {
 @DslMarker
 annotation class ImGUI
 
-fun gui(
-    renderer: ImGUIRenderer,
+fun <TEXTURE> gui(
+    renderer: ImGUIRenderer<TEXTURE>,
+    defaultTexture: TEXTURE,
     inputCapture: InputCapture,
     gameResolution: Resolution,
     widgetBuilder: WidgetAtlas = defaultWidgetAtlas(),
-    builder: WidgetBuilder.() -> Unit
+    builder: WidgetBuilder<TEXTURE>.() -> Unit
 ) {
     inputCapture.update()
-    val widgetDsl = WidgetDsl(inputCapture, gameResolution, widgetBuilder)
+    val widgetDsl = WidgetDsl(defaultTexture, inputCapture, gameResolution, widgetBuilder)
     widgetDsl.builder()
-    renderer.render(
-        widgetDsl.vertices.toFloatArray(),
-        widgetDsl.uvs.toFloatArray(),
-        widgetDsl.verticesOrder.toIntArray()
-    )
+    widgetDsl.batchs.values.forEach { batch ->
+        renderer.render(
+            batch.texture,
+            batch.vertices.toFloatArray(),
+            batch.uvs.toFloatArray(),
+            batch.verticesOrder.toIntArray()
+        )
+    }
 }
 
-interface WidgetBuilder {
+interface WidgetBuilder<TEXTURE> {
 
     fun horizontalContainer(
         x: Float,
         y: Float,
         width: Float,
-        builder: WidgetDsl.ContainerDsl.() -> Unit
+        builder: WidgetDsl<TEXTURE>.ContainerDsl.() -> Unit
     )
 
     fun verticalContainer(
         x: Float = 0f,
         y: Float = 0f,
         width: Float = 1f,
-        builder: WidgetDsl.ContainerDsl.() -> Unit
+        builder: WidgetDsl<TEXTURE>.ContainerDsl.() -> Unit
     )
 }
 
+class TextureDescription<TEXTURE>(val texture: TEXTURE, val with: Int, val height: Int)
+
+class Batch<TEXTURE>(
+    val vertices: ArrayList<Float> = arrayListOf(),
+    val uvs: ArrayList<Float> = arrayListOf(),
+    val verticesOrder: ArrayList<Int> = arrayListOf(),
+    val texture: TEXTURE
+)
+
 @ImGUI
-class WidgetDsl(
+class WidgetDsl<TEXTURE>(
+    private val defaultTexture: TEXTURE,
     private val inputCapture: InputCapture,
     private val gameResolution: Resolution,
     private val widgetAtlas: WidgetAtlas
-) : WidgetBuilder {
+) : WidgetBuilder<TEXTURE> {
 
-    internal val vertices: ArrayList<Float> = arrayListOf()
-    internal val uvs: ArrayList<Float> = arrayListOf()
-    internal val verticesOrder: ArrayList<Int> = arrayListOf()
+    private val defaultBatch = Batch(texture = defaultTexture)
+    private val defaultQuad = Quad(defaultBatch)
 
-    private val quad = Quad(vertices, verticesOrder, uvs)
+    val batchs = mutableMapOf<TEXTURE, Batch<TEXTURE>>().also {
+        it.put(defaultTexture, defaultBatch)
+    }
+
+    private val quads = mutableMapOf<TEXTURE, Quad>().also {
+        it.put(defaultTexture, defaultQuad)
+    }
 
     override fun horizontalContainer(
         x: Float,
@@ -124,7 +143,7 @@ class WidgetDsl(
             val borderHeight =
                 (abs(uvsLeft.second.y - uvsLeft.first.y) * widgetAtlas.resolution.height) / gameResolution.height
 
-            quad.append(cursor.x + this@ContainerDsl.width * x, cursor.y, borderWidth, borderHeight, uvsLeft)
+            defaultQuad.append(cursor.x + this@ContainerDsl.width * x, cursor.y, borderWidth, borderHeight, uvsLeft)
 
             val uvsCenter = if (isPushed) {
                 widgetAtlas.buttonActivated.center
@@ -136,7 +155,7 @@ class WidgetDsl(
                 }
             }
             // TODO: manage parent width too.
-            quad.append(
+            defaultQuad.append(
                 cursor.x + this@ContainerDsl.width * x + borderWidth,
                 cursor.y,
                 (this@ContainerDsl.width * width) - 2 * borderWidth,
@@ -153,7 +172,7 @@ class WidgetDsl(
                     widgetAtlas.buttonIdle.right
                 }
             }
-            quad.append(
+            defaultQuad.append(
                 cursor.x + this@ContainerDsl.width * x + (this@ContainerDsl.width * width) - borderWidth,
                 cursor.y,
                 borderWidth,
@@ -188,6 +207,29 @@ class WidgetDsl(
             name: String,
             value: String,
         ) {
+            TODO("Not yet implemented")
+        }
+
+        fun texture(
+            x: Float = 0f,
+            width: Float = 1f,
+            texture: TextureDescription<TEXTURE>
+        ) {
+            val quad = quads.getOrPut(texture.texture) {
+                Quad(batchs.getOrPut(texture.texture) { Batch(texture = texture.texture) })
+            }
+
+            val ratio = texture.height / texture.with.toFloat()
+            val resolution = Resolution(texture.with, texture.height)
+            quad.append(
+                cursor.x + this@ContainerDsl.width * x,
+                cursor.y,
+                this@ContainerDsl.width * width,
+                this@ContainerDsl.width * width * ratio,
+                UVCoordinates(0, 0, resolution) to (UVCoordinates(texture.with, texture.height, resolution))
+            )
+
+            cursor.advance(this@ContainerDsl.width * width, this@ContainerDsl.width * width * ratio)
         }
 
         private fun drawText(x: Float, y: Float, text: String) {
@@ -199,7 +241,7 @@ class WidgetDsl(
                     currentY += (uvs.height * widgetAtlas.resolution.height) / gameResolution.height
                     currentX = x
                 } else {
-                    quad.append(
+                    defaultQuad.append(
                         currentX,
                         currentY,
                         (uvs.width * widgetAtlas.resolution.width) / gameResolution.width,

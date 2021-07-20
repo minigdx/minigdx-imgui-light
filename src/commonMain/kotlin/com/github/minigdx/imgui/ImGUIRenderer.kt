@@ -1,6 +1,6 @@
 package com.github.minigdx.imgui
 
-interface ImGUIRenderer {
+interface ImGUIRenderer<TEXTURE> {
 
-    fun render(vertices: FloatArray, uv: FloatArray, verticesOrder: IntArray)
+    fun render(texture: TEXTURE, vertices: FloatArray, uv: FloatArray, verticesOrder: IntArray)
 }
