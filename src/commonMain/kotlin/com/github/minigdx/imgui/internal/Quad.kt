@@ -1,10 +1,17 @@
 package com.github.minigdx.imgui.internal
 
+import com.github.minigdx.imgui.Batch
+
+/**
+ * Add a Quad to the vertices.
+ */
 class Quad(
-    private val vertices: ArrayList<Float> = arrayListOf<Float>(),
-    private val verticesOrder: ArrayList<Int> = arrayListOf<Int>(),
-    private val uvs: ArrayList<Float> = arrayListOf<Float>(),
+    private val vertices: ArrayList<Float> = arrayListOf(),
+    private val verticesOrder: ArrayList<Int> = arrayListOf(),
+    private val uvs: ArrayList<Float> = arrayListOf(),
 ) {
+
+    constructor(batch: Batch<*>) : this(batch.vertices, batch.verticesOrder, batch.uvs)
 
     fun append(x: Float, y: Float, with: Float, height: Float, uv: Pair<UVCoordinates, UVCoordinates>) {
         val vertexIndex = vertices.size / 3
