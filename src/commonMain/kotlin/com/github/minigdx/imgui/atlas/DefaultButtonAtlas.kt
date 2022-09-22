@@ -36,4 +36,9 @@ class DefaultButtonAtlas(
         yOffset + 44,
         resolution
     )
+
+    companion object {
+        const val BORDER_WIDTH = 3
+        const val HEIGHT = 11
+    }
 }
