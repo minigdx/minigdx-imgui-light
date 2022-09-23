@@ -10,8 +10,8 @@ data class Cursor(val way: CursorWay, var x: Float = FILL_WIDTH, var y: Float = 
         VERTICAL
     }
     fun reset(x: Float = FILL_WIDTH, y: Float = FILL_WIDTH) {
-       this.x = x
-       this.y = y
+        this.x = x
+        this.y = y
     }
 
     fun advance(with: Float, height: Float) {

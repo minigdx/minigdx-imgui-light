@@ -1,9 +1,9 @@
 package com.github.minigdx.imgui.commands
 
-import com.github.minigdx.imgui.internal.TextureDescription
 import com.github.minigdx.imgui.internal.Cursor
 import com.github.minigdx.imgui.internal.PrimitivesOrder
 import com.github.minigdx.imgui.internal.Quad
+import com.github.minigdx.imgui.internal.TextureDescription
 
 class Picture<TEXTURE>(
     override val texture: TextureDescription<TEXTURE>

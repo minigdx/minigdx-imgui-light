@@ -25,6 +25,6 @@ class DefaultWidgetAtlas : WidgetAtlas {
         get() = TODO("Not yet implemented")
     override val text: WidgetAtlas.TextAtlas = DefaultTextAtlas(resolution)
 
-    override val checkboxUnchecked: Pair<UVCoordinates, UVCoordinates>  = UVCoordinates(64, 33, resolution) to UVCoordinates(72, 44, resolution)
-    override val checkboxChecked: Pair<UVCoordinates, UVCoordinates>  = UVCoordinates(72, 33, resolution) to UVCoordinates(80, 44, resolution)
+    override val checkboxUnchecked: Pair<UVCoordinates, UVCoordinates> = UVCoordinates(64, 33, resolution) to UVCoordinates(72, 44, resolution)
+    override val checkboxChecked: Pair<UVCoordinates, UVCoordinates> = UVCoordinates(72, 33, resolution) to UVCoordinates(80, 44, resolution)
 }

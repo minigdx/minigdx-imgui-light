@@ -18,11 +18,11 @@ class Quad(
         // 0
         addVertex(x, y, 0f)
         // 1
-        addVertex((x + with), y , 0f)
+        addVertex((x + with), y, 0f)
         // 2
-        addVertex((x + with), (y + height) , 0f)
+        addVertex((x + with), (y + height), 0f)
         // 3
-        addVertex(x , (y + height), 0f)
+        addVertex(x, (y + height), 0f)
 
         // 0
         uvs.add(uv.first.x)

@@ -7,11 +7,14 @@ class ImGuiTest {
 
     @Test
     fun itCreatesABatch() {
-        ImGui.setup(Unit, object : InputCapture {
-            override val x: Float = 0f
-            override val y: Float = 0f
-            override val isTouch: Boolean = false
-        })
+        ImGui.setup(
+            Unit,
+            object : InputCapture {
+                override val x: Float = 0f
+                override val y: Float = 0f
+                override val isTouch: Boolean = false
+            }
+        )
 
         ImGui.container("test")
         ImGui.beginFrame()
