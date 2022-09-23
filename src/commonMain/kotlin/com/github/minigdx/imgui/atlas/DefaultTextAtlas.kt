@@ -98,10 +98,19 @@ class DefaultTextAtlas(override val resolution: Resolution) : WidgetAtlas.TextAt
         create('.', 201, 22, 6, 10),
         create(';', 208, 22, 6, 10),
         create(':', 216, 22, 6, 10),
-
+        create(' ', 248, 0, 4, 10),
     )
 
-    private val default = create(' ', 160, 22, 8, 10)
+    private val default = create('?', 160, 22, 8, 10)
+
+    private class LetterInformation(
+        val char: Char,
+        val x: Int,
+        val y: Int,
+        val with: Int,
+        val height: Int,
+        val uvs: Pair<UVCoordinates, UVCoordinates>
+    )
 
     private fun create(
         char: Char,
@@ -109,14 +118,21 @@ class DefaultTextAtlas(override val resolution: Resolution) : WidgetAtlas.TextAt
         y: Int,
         with: Int,
         height: Int
-    ): Pair<Char, Pair<UVCoordinates, UVCoordinates>> {
+    ): Pair<Char, LetterInformation> {
         val endX = x + with
         val endY = y + height
 
-        return char to (UVCoordinates(x, y, resolution) to UVCoordinates(endX, endY, resolution))
+        val uvs = UVCoordinates(x, y, resolution) to UVCoordinates(endX, endY, resolution)
+        return char to LetterInformation(char, x, y, with, height, uvs)
     }
 
     override fun letter(letter: Char): Pair<UVCoordinates, UVCoordinates> {
-        return cache[letter] ?: default.second
+        val letterInformation = cache[letter] ?: default.second
+        return letterInformation.uvs
+    }
+
+    override fun width(letter: Char): Int {
+        val letterInformation = cache[letter] ?: default.second
+        return letterInformation.with
     }
 }

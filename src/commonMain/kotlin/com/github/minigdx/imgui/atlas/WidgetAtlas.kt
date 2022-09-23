@@ -27,13 +27,30 @@ interface WidgetAtlas {
 
         val resolution: Resolution
         fun letter(letter: Char): Pair<UVCoordinates, UVCoordinates>
+
+        fun width(letter: Char): Int
     }
 
     val buttonIdle: ButtonAtlas
     val buttonOver: ButtonAtlas
     val buttonActivated: ButtonAtlas
 
+    val containerTopDark: ButtonAtlas
+    val containerBodyDark: ButtonAtlas
+    val containerBottomDark: ButtonAtlas
+
+    val containerTopClear: ButtonAtlas
+    val containerBodyClear: ButtonAtlas
+    val containerBottomClear: ButtonAtlas
+
+    val checkboxUnchecked: Pair<UVCoordinates, UVCoordinates>
+    val checkboxChecked: Pair<UVCoordinates, UVCoordinates>
+
     val label: LabelAtlas
 
     val text: TextAtlas
+
+    companion object {
+        val DEFAULT = DefaultWidgetAtlas()
+    }
 }

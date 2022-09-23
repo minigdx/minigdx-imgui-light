@@ -6,23 +6,23 @@ import com.github.minigdx.imgui.Batch
  * Add a Quad to the vertices.
  */
 class Quad(
-    private val vertices: ArrayList<Float> = arrayListOf(),
-    private val verticesOrder: ArrayList<Int> = arrayListOf(),
-    private val uvs: ArrayList<Float> = arrayListOf(),
+    val vertices: ArrayList<Float> = arrayListOf(),
+    val verticesOrder: ArrayList<Int> = arrayListOf(),
+    val uvs: ArrayList<Float> = arrayListOf(),
 ) {
 
     constructor(batch: Batch<*>) : this(batch.vertices, batch.verticesOrder, batch.uvs)
 
-    fun append(x: Float, y: Float, with: Float, height: Float, uv: Pair<UVCoordinates, UVCoordinates>) {
+    fun append(x: Float, y: Float, with: Float, height: Float, uv: Pair<UVCoordinates, UVCoordinates>): Quad {
         val vertexIndex = vertices.size / 3
         // 0
-        addVertex(x * 2f - 1f, y * -2f + 1f, 0f)
+        addVertex(x, y, 0f)
         // 1
-        addVertex((x + with) * 2f - 1f, y * -2f + 1f, 0f)
+        addVertex((x + with), y, 0f)
         // 2
-        addVertex((x + with) * 2f - 1f, (y + height) * -2f + 1f, 0f)
+        addVertex((x + with), (y + height), 0f)
         // 3
-        addVertex(x * 2f - 1f, (y + height) * -2f + 1f, 0f)
+        addVertex(x, (y + height), 0f)
 
         // 0
         uvs.add(uv.first.x)
@@ -49,6 +49,8 @@ class Quad(
         verticesOrder.addAll(
             listOf(vertexIndex + 2, vertexIndex + 3, vertexIndex + 0)
         )
+
+        return this
     }
 
     private fun addVertex(x: Float, y: Float, z: Float) {
