@@ -4,7 +4,7 @@ import com.github.minigdx.imgui.ImGui
 import com.github.minigdx.imgui.internal.Cursor
 import com.github.minigdx.imgui.internal.Quad
 
-object BreakLine : Primitive {
+internal object BreakLine : Primitive {
 
     override fun advance(cursor: Cursor) {
         cursor.advanceLine()

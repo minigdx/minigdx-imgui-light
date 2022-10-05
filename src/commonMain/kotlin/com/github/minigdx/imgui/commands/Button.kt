@@ -4,7 +4,7 @@ import com.github.minigdx.imgui.ImGui
 import com.github.minigdx.imgui.internal.Cursor
 import com.github.minigdx.imgui.internal.PrimitivesOrder
 
-class Button(
+internal class Button(
     private val text: String,
     private val isPushed: Boolean,
     private val hasBeenPushed: Container.MutableBoolean

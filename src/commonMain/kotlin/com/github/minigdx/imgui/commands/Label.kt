@@ -6,7 +6,7 @@ import com.github.minigdx.imgui.internal.Cursor
 import com.github.minigdx.imgui.internal.PrimitivesOrder
 import com.github.minigdx.imgui.internal.Quad
 
-class Label(
+internal class Label(
     val text: String
 ) : Command, Primitive {
 

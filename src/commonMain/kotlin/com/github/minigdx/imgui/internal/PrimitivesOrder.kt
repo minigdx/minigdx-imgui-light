@@ -1,7 +1,6 @@
 package com.github.minigdx.imgui.internal
 
 import com.github.minigdx.imgui.Batch
-import com.github.minigdx.imgui.ImGui
 import com.github.minigdx.imgui.commands.Primitive
 
 class PrimitivesOrder(private val primitives: MutableList<Primitive>, private val cursor: Cursor) {
@@ -25,7 +24,7 @@ class PrimitivesOrder(private val primitives: MutableList<Primitive>, private va
 
     private fun getBatch(primitive: Primitive): Batch<Any> {
         val batch = internalBatch[primitive.texture]
-        return batch ?: Batch(texture = ImGui.atlas).also { newBatch ->
+        return batch ?: Batch(texture = primitive.texture).also { newBatch ->
             internalBatch[primitive.texture] = newBatch
             batches.add(newBatch)
         }
