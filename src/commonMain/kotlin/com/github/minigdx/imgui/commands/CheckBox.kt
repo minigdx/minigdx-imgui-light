@@ -6,10 +6,16 @@ import com.github.minigdx.imgui.internal.Cursor
 import com.github.minigdx.imgui.internal.PrimitivesOrder
 import com.github.minigdx.imgui.internal.Quad
 
-class CheckBox(private val checked: Boolean) : Command, Primitive {
+class CheckBox(private val checked: Boolean, private val text: String, private val hasBeenClicked: Container.MutableBoolean) : Command, Primitive {
 
     override fun addInto(primitivesOrder: PrimitivesOrder) {
+        val label = Label(text)
+        val isOver = ImGui.isOver(primitivesOrder.x, primitivesOrder.y, WIDTH + label.width, Cursor.LINE_HEIGHT)
+        val isPushed = ImGui.isPushed()
+
+        hasBeenClicked.value = isOver && isPushed
         primitivesOrder.add(this)
+        label.addInto(primitivesOrder)
     }
 
     override fun advance(cursor: Cursor) {

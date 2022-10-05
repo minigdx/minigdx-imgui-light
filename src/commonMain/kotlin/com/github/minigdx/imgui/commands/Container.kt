@@ -40,10 +40,10 @@ class Container(
         mutableBoolean.value
     }
 
-    fun checkbox(text: String, checked: Boolean = false) = addLine {
-        CheckBox(checked).addInto(internalCommands)
+    fun checkbox(text: String, checked: Boolean = false): Boolean = addLine {
+        CheckBox(checked, text, mutableBoolean).addInto(internalCommands)
         internalCommands.add(Fill)
-        Label(text).addInto(internalCommands)
+        mutableBoolean.value
     }
 
     private fun <T> addLine(content: Container.() -> T): T {
