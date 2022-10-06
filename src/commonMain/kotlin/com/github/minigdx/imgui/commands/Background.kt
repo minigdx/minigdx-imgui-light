@@ -6,7 +6,7 @@ import com.github.minigdx.imgui.atlas.WidgetAtlas
 import com.github.minigdx.imgui.internal.Cursor
 import com.github.minigdx.imgui.internal.Quad
 
-class Background(
+internal class Background(
     private val type: Type,
     private val width: Float,
     private val height: Float = Cursor.LINE_HEIGHT,

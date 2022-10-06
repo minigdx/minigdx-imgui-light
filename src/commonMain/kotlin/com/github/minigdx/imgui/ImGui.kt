@@ -14,7 +14,7 @@ object ImGui {
 
     private val commands = mutableListOf<Primitive>()
 
-    private val cursor = Cursor(Cursor.CursorWay.HORIZONTAL)
+    private val cursor = Cursor()
 
     private val primitivesOrder = PrimitivesOrder(commands, cursor)
 

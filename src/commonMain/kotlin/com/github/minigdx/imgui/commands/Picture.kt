@@ -1,22 +1,24 @@
 package com.github.minigdx.imgui.commands
 
 import com.github.minigdx.imgui.internal.Cursor
-import com.github.minigdx.imgui.internal.PrimitivesOrder
 import com.github.minigdx.imgui.internal.Quad
-import com.github.minigdx.imgui.internal.TextureDescription
+import com.github.minigdx.imgui.internal.Resolution
+import com.github.minigdx.imgui.internal.UVCoordinates
 
-class Picture<TEXTURE>(
-    override val texture: TextureDescription<TEXTURE>
-) : Command, Primitive {
-
-    override fun addInto(primitivesOrder: PrimitivesOrder) {
-        TODO("Not yet implemented")
-    }
+internal class Picture(
+    override val texture: Any,
+    val width: Float,
+    val height: Float,
+) : Primitive {
 
     override fun advance(cursor: Cursor) {
-        TODO("Not yet implemented")
+        cursor.advance(width, height)
     }
 
-    override val quads: List<Quad>
-        get() = TODO("Not yet implemented")
+    override val quads: List<Quad> = listOf(Quad().append(0f, 0f, width, height, computeUvs()))
+
+    private fun computeUvs(): Pair<UVCoordinates, UVCoordinates> {
+        val resolution = Resolution(1f, 1f)
+        return UVCoordinates(0f, 0f, resolution) to UVCoordinates(1f, 1f, resolution)
+    }
 }

@@ -1,5 +1,6 @@
 package com.github.minigdx.imgui.commands
 
+import com.github.minigdx.imgui.internal.Cursor
 import com.github.minigdx.imgui.internal.PrimitivesOrder
 
 class Container(
@@ -10,7 +11,7 @@ class Container(
 
     class MutableBoolean(var value: Boolean = false)
 
-    lateinit var internalCommands: PrimitivesOrder
+    private lateinit var internalCommands: PrimitivesOrder
 
     private val mutableBoolean = MutableBoolean()
 
@@ -40,14 +41,18 @@ class Container(
         mutableBoolean.value
     }
 
-    fun checkbox(text: String, checked: Boolean = false) = addLine {
-        CheckBox(checked).addInto(internalCommands)
+    fun checkbox(text: String, checked: Boolean = false): Boolean = addLine {
+        CheckBox(checked, text, mutableBoolean).addInto(internalCommands)
         internalCommands.add(Fill)
-        Label(text).addInto(internalCommands)
+        mutableBoolean.value
     }
 
-    private fun <T> addLine(content: Container.() -> T): T {
-        internalCommands.add(Background(Background.Type.BODY, width.toFloat()))
+    fun texture(texture: Any, width: Int, height: Int) = addLine(height.toFloat() + Cursor.LINE_HEIGHT) {
+        internalCommands.add(Picture(texture, width.toFloat(), height.toFloat()))
+    }
+
+    private fun <T> addLine(height: Float = Cursor.LINE_HEIGHT, content: Container.() -> T): T {
+        internalCommands.add(Background(Background.Type.BODY, width.toFloat(), height))
         internalCommands.add(Fill)
         val result = content()
         internalCommands.add(BreakLine)

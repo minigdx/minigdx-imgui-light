@@ -4,7 +4,7 @@ import com.github.minigdx.imgui.ImGui
 import com.github.minigdx.imgui.internal.Cursor
 import com.github.minigdx.imgui.internal.Quad
 
-object Fill : Primitive {
+internal object Fill : Primitive {
 
     override fun advance(cursor: Cursor) {
         cursor.advanceFill()
